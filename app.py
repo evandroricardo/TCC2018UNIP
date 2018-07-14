@@ -30,14 +30,16 @@ def amostra(tamanho: int, campos: list=None):
 
 
 def treinar(amostra, tamanho):
-    network.SGD(amostra, len(amostra), tamanho, 0.005)
+    network.SGD(amostra, len(amostra), tamanho, 0.5)
 
 
 def feedforward(_input: tuple):
     return network.feedforward(_input)
 
+
 def evaluate(dados: list):
     return network.evaluate(dados) / len(dados)
+
 
 campos = ["puCompra", "puVenda"] # (x, y)
 a = amostra(200, campos)
