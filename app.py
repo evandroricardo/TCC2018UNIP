@@ -13,8 +13,7 @@ csv["puCompra"] = csv["puCompra"].map(etl.real_para_float)
 csv["puVenda"] = csv["puVenda"].map(etl.real_para_float)
 
 
-network = Network([2, 3, 1])
-# network.update_mini_batch([(0.5, 0.7)], 0.005)
+network = Network([10, 30, 10])
 
 
 def dataset_para_tuplas(dataset):
@@ -29,8 +28,16 @@ def amostra(tamanho: int, campos: list=None):
     return dataset_para_tuplas(subset)
 
 
-def treinar(amostra, tamanho):
-    network.SGD(amostra, len(amostra), tamanho, 0.5)
+def treinar(amostra, epocas, lote, eta, test):
+    """
+    Parâmetros de rede:
+         O primeiro parametro é a amostra
+         2º param é contagem de épocas
+         O terceiro param é tamanho do lote
+         4º param é a taxa de aprendizado (eta)
+         O quinto parametro é a serie de teste
+    """
+    network.SGD(amostra, epocas, lote, eta, test_data=test)
 
 
 def feedforward(_input: tuple):
@@ -41,9 +48,10 @@ def evaluate(dados: list):
     return network.evaluate(dados) / len(dados)
 
 
-campos = ["puCompra", "puVenda"] # (x, y)
+campos = ["data", "taxaVenda"] # (x, y)
 a = amostra(200, campos)
+b = amostra(200, campos)
 tudo = dataset_para_tuplas(csv[campos])
-treinar(a, 50)           # f(x) = max(feedfoward(x))
+treinar(a, 30, 10, 3, b)           # f(x) = max(feedfoward(x))
 result = evaluate(tudo)  # evaluate(x,y) = f(x) == y
 print(result)
