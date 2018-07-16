@@ -13,7 +13,7 @@ csv["puCompra"] = csv["puCompra"].map(etl.real_para_float)
 csv["puVenda"] = csv["puVenda"].map(etl.real_para_float)
 
 
-network = Network([10, 30, 10])
+network = Network([784, 30, 10])
 
 
 def dataset_para_tuplas(dataset):
