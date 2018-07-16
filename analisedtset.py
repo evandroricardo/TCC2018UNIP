@@ -14,9 +14,13 @@ csv["puVenda"] = csv["puVenda"].map(etl.real_para_float)
 csv = csv[["data", "taxaCompra", "taxaVenda", "puCompra", "puVenda"]]
 
 #head
-print(csv.head(50))
+# print(csv.head(50))
 
-LinearRegression()
+lnr = LinearRegression()
+lnr.fit(csv["puCompra"][:200].values.reshape(-1, 1), csv["taxaCompra"][:200].values.reshape(-1, 1))
+pred = lnr.predict(csv["puCompra"].values.reshape(-1, 1))
+
+print("ok")
 
 #shape
 #print(csv.shape)
