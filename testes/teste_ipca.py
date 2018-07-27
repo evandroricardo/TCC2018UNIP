@@ -1,4 +1,5 @@
 from dados import CSV
+from numpy import random
 
 class TesteIPCA:
     @property
@@ -23,12 +24,16 @@ class TesteIPCA:
 
     def nn_regressao(self, csv):
         from nnregression import run
-        x = csv["puCompra"].values.reshape(-1, 1)
-        y = csv["taxaCompra"].values.reshape(-1, 1)
-        xAmostra = csv["puCompra"][:200].values.reshape(-1, 1)
-        yAmostra = csv["taxaCompra"][:200].values.reshape(-1, 1)
+        x = csv["puCompra"].values
+        y = csv["taxaCompra"].values
+        _tamnho_amostra = int(len(x) * 0.8)
+        _tamnho_teste = int(len(x) * 0.2)
+        xAmostra = random.choice(x, _tamnho_amostra).reshape(-1, 1)
+        yAmostra = random.choice(y, _tamnho_amostra).reshape(-1, 1)
+        xTeste = random.choice(x, _tamnho_teste).reshape(-1, 1)
+        yTeste = random.choice(y, _tamnho_teste).reshape(-1, 1)
         return run(
-            csv, x, y, xAmostra, yAmostra,
+            csv, x, y, xTeste, yTeste, xAmostra, yAmostra,
             hidden_layer_sizes=(100,),  activation='relu', solver='adam', alpha=0.001, batch_size='auto',
             learning_rate='constant', learning_rate_init=0.01, power_t=0.5, max_iter=1000, shuffle=True,
             random_state=0, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=False,
