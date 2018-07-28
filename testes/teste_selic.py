@@ -1,5 +1,7 @@
-from dados import CSV
+from dados import CSV, Indicador
+import etl
 from numpy import random
+from sklearn.model_selection import train_test_split
 
 class TesteSelic:
     @property
@@ -24,19 +26,21 @@ class TesteSelic:
 
     def nn_regressao(self, csv):
         from nnregression import run
-        x = csv["data"].values
+        ipca = Indicador.ipca
+
+        csv["ipcaMes"] = ipca["taxaMes"]
+        csv["ipca12Meses"] = ipca["taxa12Meses"]
+        csv["ipcaIndice"] = ipca["indice"]
+        csv.fillna(method='ffill', inplace=True)
+        csv.fillna(method='bfill', inplace=True)
+
+        X = csv[["data", "ipcaMes", "ipca12Meses", "ipcaIndice"]].values
         y = csv["puCompra"].values
-        _tamnho_amostra = int(len(x) * 0.8)
-        _tamnho_teste = int(len(x) * 0.2)
-        xAmostra = random.choice(x, _tamnho_amostra).reshape(-1, 1)
-        yAmostra = random.choice(y, _tamnho_amostra).reshape(-1, 1)
-        xTeste = random.choice(x, _tamnho_teste).reshape(-1, 1)
-        yTeste = random.choice(y, _tamnho_teste).reshape(-1, 1)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
         return run(
-            csv, x, y, xTeste, yTeste, xAmostra, yAmostra,
-            hidden_layer_sizes=(1000, 1000),  activation='relu', solver='lbfgs', alpha=0.001, batch_size='auto',
-            learning_rate='constant', learning_rate_init=0.01, power_t=0.5, max_iter=1000, shuffle=False,
-            random_state=0, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=False,
-            early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08
+            X, y, X_test, y_test, X_train, y_train, hidden_layer_sizes=(1000,500,265,128,),
+            activation="relu", solver="adam", learning_rate="adaptive", max_iter=1000000000,
+            alpha=0.00000000001,
+            random_state=0
         )
 

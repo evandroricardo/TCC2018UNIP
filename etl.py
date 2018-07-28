@@ -6,6 +6,7 @@ def data_para_datetime(item):
         return 0
     return datetime.datetime.strptime(item, "%d/%m/%Y").timestamp()
 
+
 def real_para_float(item):
     if item is nan:
         return 0

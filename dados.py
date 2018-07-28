@@ -2,13 +2,20 @@ import pandas
 import etl
 
 
+def _read_csv_from_file(__nome_arquivo: str):
+    return pandas.read_csv("./data/" + __nome_arquivo, sep=";")
+
+
 def __load_csv(__nome_arquivo: str):
-    csv = pandas.read_csv("./data/" + __nome_arquivo, sep=";")
+    csv = _read_csv_from_file(__nome_arquivo)
     csv["data"] = csv["data"].map(etl.data_para_datetime)
     csv["taxaCompra"] = csv["taxaCompra"].map(etl.porcentagem_para_float)
     csv["taxaVenda"] = csv["taxaVenda"].map(etl.porcentagem_para_float)
     csv["puCompra"] = csv["puCompra"].map(etl.real_para_float)
     csv["puVenda"] = csv["puVenda"].map(etl.real_para_float)
+
+    csv["index"] = csv["data"]
+    csv.set_index("index", inplace=True)
     return csv[["data", "taxaCompra", "taxaVenda", "puCompra", "puVenda"]]
 
 
@@ -62,4 +69,32 @@ class __CSVLoader:
             yield self.selic
         return __gen__()
 
+
+class __IndicadorLoader:
+    @property
+    def ipca(self):
+        meses = {
+            "JAN": 1, "FEV": 2, "MAR": 3, "ABR": 4, 
+            "MAI": 5, "JUN": 6, "JUL": 7, "AGO": 8,
+            "SET": 9, "OUT": 10, "NOV": 11, "DEZ": 12, 
+        }
+
+        data = _read_csv_from_file("ipca.csv")
+        data["data"] = pandas.Series((
+            etl.datetime.datetime(data["ano"][i], meses[data["mes"][i]], 1).timestamp()
+            for i in range(0, len(data))
+        ), index=data.index)
+        data["indice"] = data["indice"].map(etl.real_para_float)
+        data["taxaMes"] = data["taxaMes"].map(etl.real_para_float)
+        data["taxa3Meses"] = data["taxa3Meses"].map(etl.porcentagem_para_float)
+        data["taxa6Meses"] = data["taxa6Meses"].map(etl.porcentagem_para_float)
+        data["taxaAno"] = data["taxaAno"].map(etl.porcentagem_para_float)
+        data["taxa12Meses"] = data["taxa12Meses"].map(etl.porcentagem_para_float)
+
+        data["index"] = data["data"]
+        data.set_index("index", inplace=True)
+        return data[["data", "indice", "taxaMes", "taxa3Meses", "taxa6Meses", "taxaAno", "taxa12Meses"]]
+
+
 CSV = __CSVLoader()
+Indicador = __IndicadorLoader()
