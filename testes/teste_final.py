@@ -11,8 +11,8 @@ def testar():
     for test in testes:
         print(test.name)
         csv = test.pega_csv()
-        # test.regressao_linear(csv)
-        # test.clusterizacao(csv)
+        test.regressao_linear(csv)
+        test.clusterizacao(csv)
         test.nn_regressao(csv)
 
     print("\n\nFIM!")
