@@ -3,8 +3,8 @@ from testes.teste_selic import TesteSelic
 
 def testar():
     testes = [
-        # TesteIPCA(), 
-        TesteSelic()
+        TesteIPCA() 
+        #TesteSelic()
     ]
 
     print("Executando testes...\n")
