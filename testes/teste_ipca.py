@@ -1,5 +1,7 @@
 from dados import CSV
 from numpy import random
+from sklearn.model_selection import train_test_split
+
 
 class TesteIPCA:
     @property
@@ -11,33 +13,36 @@ class TesteIPCA:
 
     def clusterizacao(self, csv):
         from clusterizacao import run
-        x = csv[["puCompra", "taxaCompra"]].values
+        x = csv[["data", "puCompra"]].values
         return run(csv, x, 2, random_state=0)
 
     def regressao_linear(self, csv):
         from regressaolinear import run
-        x = csv["puCompra"].values.reshape(-1, 1)
-        y = csv["taxaCompra"].values.reshape(-1, 1)
-        xAmostra = csv["puCompra"][:200].values.reshape(-1, 1)
-        yAmostra = csv["taxaCompra"][:200].values.reshape(-1, 1)
-        return run(csv, x, y, xAmostra, yAmostra)
+        X = csv[["data", "taxaCompra"]].values
+        y = csv["puCompra"].values
+        XAmostra = csv[["data", "taxaCompra"]].values[:200, :]
+        yAmostra = csv["puCompra"].values[:200]
+        return run(csv, X, y, XAmostra, yAmostra)
 
     def nn_regressao(self, csv):
         from nnregression import run
-        x = csv["puCompra"].values
-        y = csv["taxaCompra"].values
-        _tamnho_amostra = int(len(x) * 0.8)
-        _tamnho_teste = int(len(x) * 0.2)
-        xAmostra = random.choice(x, _tamnho_amostra).reshape(-1, 1)
-        yAmostra = random.choice(y, _tamnho_amostra).reshape(-1, 1)
-        xTeste = random.choice(x, _tamnho_teste).reshape(-1, 1)
-        yTeste = random.choice(y, _tamnho_teste).reshape(-1, 1)
+        X = csv[["data", "taxaCompra"]].values
+        y = csv["puCompra"].values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
         return run(
-            csv, x, y, xTeste, yTeste, xAmostra, yAmostra,
+            X, y, X_test, y_test, X_train, y_train, 
+            before_plot=self.before_plot_nn_regressao, plot_title="Dias corridos x Preco de compra",
             hidden_layer_sizes=(100,),  activation='relu', solver='adam', learning_rate='constant', alpha=0.001, 
             batch_size='auto', learning_rate_init=0.01, power_t=0.5, max_iter=1000, shuffle=True,
             random_state=0, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=False,
             early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08
-
         )
 
+    def before_plot_nn_regressao(self, nn, yPred, yPredTeste, score_amostra, score_todo):
+        preco_ipca_2024 = nn.predict([[2207, 0.0494]])[0] + 2119.26
+        print("Previsao preco IPCA+ 2024 no vencimento: {0}; Min: {1}; Max: {2}".format(
+            preco_ipca_2024,
+            preco_ipca_2024 * score_todo,
+            preco_ipca_2024 * (2 - score_todo)
+        ))
+        return yPred, yPredTeste
