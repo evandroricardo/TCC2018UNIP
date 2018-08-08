@@ -4,28 +4,22 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 
-def run(csv, x, y, xAmostra, yAmostra, **config):
-      lnr = LinearRegression(**config)
-      lnr.fit(xAmostra, yAmostra)
+def run(csv, x, y, xAmostra, yAmostra, before_plot=None, **config):
+    lnr = LinearRegression(**config)
+    lnr.fit(xAmostra, yAmostra)
 
-      pred = lnr.predict(x)
+    pred = lnr.predict(x)
 
-      # Plotagem das saídas
-      plt.scatter(x[:, 0], y, s=1, color='g', marker="s", label='Real')
-      plt.plot(x[:, 0], pred, color='b', linewidth=3, label='Prediction')
-      plt.title("Preco de Compra X Taxa de Compra")
+    if before_plot is not None:
+        before_plot(lnr, pred)
 
-      plt.xticks(())
-      plt.yticks(())
+    # Plotagem das saídas
+    plt.scatter(x[:, 0], y, s=1, color='g', marker="s", label='Real')
+    plt.plot(x[:, 0], pred, color='b', linewidth=3, label='Prediction')
+    plt.title("Data X Taxa de Compra")
 
-      plt.legend()
-      plt.show()
+    plt.xticks(())
+    plt.yticks(())
 
-      #print(pred[:10])
-      #print("ok")
-
-      #shape
-      #print(csv.shape)
-
-      #describe data set 
-      #print(csv.describe())
+    plt.legend()
+    plt.show()

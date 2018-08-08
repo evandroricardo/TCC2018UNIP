@@ -11,8 +11,8 @@ def __load_csv(__nome_arquivo: str, data_inicio: str):
     csv["data"] = csv["data"].map(etl.data_para_datetime_normalizada(data_inicio))
     csv["taxaCompra"] = csv["taxaCompra"].map(etl.porcentagem_para_float)
     csv["taxaVenda"] = csv["taxaVenda"].map(etl.porcentagem_para_float)
-    csv["puCompra"] = csv["puCompra"].map(etl.real_para_float)
-    csv["puVenda"] = csv["puVenda"].map(etl.real_para_float)
+    csv["puCompra"] = csv["puCompra"].map(etl.real_para_float) 
+    csv["puVenda"] = csv["puVenda"].map(etl.real_para_float) 
     if "selic" in csv.columns:
         csv["selic"] = csv["selic"].map(etl.porcentagem_para_float)
 
