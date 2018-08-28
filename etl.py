@@ -25,3 +25,16 @@ def porcentagem_para_float(item):
     if item is nan:
         return 0
     return real_para_float(item.replace("%","")) / 100
+
+
+def normalizar_por_variacao():
+    prev = None
+    def __gen__(item):
+        nonlocal prev
+        if prev is not None:
+            variacao = item - prev
+        else:
+            variacao = 0
+        prev = item
+        return variacao
+    return __gen__

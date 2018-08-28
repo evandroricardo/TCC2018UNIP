@@ -13,6 +13,6 @@ def run(csv, x, *args, **config):
 
     plt.subplot(221)
     plt.scatter(x[:, 0], x[:, 1], c=y_pred)
-    plt.title("Preco de Compra X Taxa de Compra")
+    plt.title("Data X Preco de Compra")
 
     plt.show()

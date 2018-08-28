@@ -1,10 +1,17 @@
 from testes.teste_ipca import TesteIPCA
 from testes.teste_selic import TesteSelic
+from testes.teste_prefixado import TestePrefixado
+from testes.teste_ipca_semestral import TesteIPCASemestral
+from testes.teste_prefixado_semestral import TestePrefixadoSemestral
 
 def testar():
     testes = [
-        TesteSelic(),
-        TesteIPCA(),
+        #TesteIPCA(),
+        #TesteIPCASemestral(), 
+        TestePrefixadoSemestral(),
+        #TesteSelic(),
+        #TestePrefixado(),       
+        
     ]
 
     print("Executando testes...\n")
