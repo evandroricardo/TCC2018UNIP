@@ -1,9 +1,9 @@
 import pandas
-import etl
+import data_layer.etl as etl
 
 
 def _read_csv_from_file(__nome_arquivo: str):
-    return pandas.read_csv("./data/" + __nome_arquivo, sep=";")
+    return pandas.read_csv("./data_layer/source/" + __nome_arquivo, sep=";")
 
 
 def __load_csv(__nome_arquivo: str, data_inicio: str):
