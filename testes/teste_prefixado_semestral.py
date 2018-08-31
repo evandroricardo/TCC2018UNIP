@@ -16,7 +16,7 @@ class TestePrefixadoSemestral:
         x = csv[["data", "puCompra"]].values
         return run(csv, x, 2, random_state=0)
 
-    def regressao_linear(self, csv):
+    def regressao_linear(self, csv, X_test=None, dont_plot=False):
         from neural.regressaolinear import run
         def before_plot(lnr, pred):
             pred = lnr.predict([[2610, 0.13]])[0] + 1025.55
@@ -24,9 +24,12 @@ class TestePrefixadoSemestral:
 
         X = csv[["data", "taxaCompra"]].values
         y = csv["puCompra"].values
-        XAmostra = csv[["data", "taxaCompra"]].values[:200, :]
-        yAmostra = csv["puCompra"].values[:200]
-        return run(csv, X, y, XAmostra, yAmostra, before_plot=before_plot)
+        X_train, _X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+        if X_test is None:
+            X_test = _X_test
+        return run(
+            csv, X_test, y_test, X_train, y_train, before_plot=before_plot, dont_plot=dont_plot
+        )
 
     def nn_regressao(self, csv, X_test=None, dont_plot=False):
         from neural.nnregression import run
@@ -55,5 +58,5 @@ class TestePrefixadoSemestral:
         return yPred, yPredTeste
 
     def predict(self, data, taxa_compra):
-        result = self.nn_regressao(self.pega_csv(), X_test=[[data, taxa_compra]], dont_plot=True)
-        return result[-1]
+        result = self.regressao_linear(self.pega_csv(), X_test=[[data, taxa_compra]], dont_plot=True)
+        return result + 1025.55, "Reg. Linear"

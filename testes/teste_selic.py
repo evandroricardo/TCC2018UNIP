@@ -54,4 +54,4 @@ class TesteSelic:
 
     def predict(self, data, selic):
         result = self.nn_regressao(self.pega_csv(), X_test=[[data, selic]], dont_plot=True)
-        return result[-1]
+        return result[-1] + 8990, "Rede Neural"

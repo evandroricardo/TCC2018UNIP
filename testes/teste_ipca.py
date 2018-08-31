@@ -52,4 +52,4 @@ class TesteIPCA:
 
     def predict(self, data, taxa_compra):
         result = self.nn_regressao(self.pega_csv(), X_test=[[data, taxa_compra]], dont_plot=True)
-        return result[-1]
+        return result[-1] + 2119.26, "Rede Neural"

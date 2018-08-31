@@ -16,16 +16,19 @@ class TestePrefixado:
         x = csv[["data", "puCompra"]].values
         return run(csv, x, 2, random_state=0)
 
-    def regressao_linear(self, csv):
+    def regressao_linear(self, csv, X_test=None, dont_plot=False):
         from neural.regressaolinear import run
         def before_plot(lnr, pred):
             print("Regressao Linear:\n\tPreco Predixado 2025: ", lnr.predict([[1614, 0.15, 0.15]])[0])
 
         X = csv[["data", "taxaCompra", "selic"]].values
         y = csv["puCompra"].values
-        XAmostra = csv[["data", "taxaCompra", "selic"]].values[:300, :]
-        yAmostra = csv["puCompra"].values[:300]
-        return run(csv, X, y, XAmostra, yAmostra, before_plot=before_plot)
+        X_train, _X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+        if X_test is None:
+            X_test = _X_test
+        return run(
+            csv, X_test, y_test, X_train, y_train, before_plot=before_plot, dont_plot=dont_plot
+        )
 
     def nn_regressao(self, csv, X_test=None, dont_plot=False):
         from neural.nnregression import run
@@ -53,6 +56,6 @@ class TestePrefixado:
         ))
         return yPred, yPredTeste
 
-    def predict(self, data, selic):
-        result = self.nn_regressao(self.pega_csv(), X_test=[[data, selic]], dont_plot=True)
-        return result[-1]
+    def predict(self, data, taxa_compra, selic):
+        result = self.regressao_linear(self.pega_csv(), X_test=[[data, taxa_compra, selic]], dont_plot=True)
+        return result + 527.59, "Reg. Linear"

@@ -9,16 +9,14 @@ def run(x, y, xTeste, yTeste, xAmostra, yAmostra, before_plot=None, plot_title=N
     yPredTeste = nn.predict(xTeste)
     yPred = nn.predict(x)
 
-    score_amostra = regression.explained_variance_score(yTeste, yPredTeste)
     score_todo = regression.explained_variance_score(y, yPred)
-
-    print("Score amostra: {:02.50f}".format(score_amostra))
     print("Score todo: {:02.50f}".format(score_todo))
-
-    if before_plot is not None:
-        yPred, yPredTeste = before_plot(nn, yPred, yPredTeste, score_amostra, score_todo)
-
     if not dont_plot:
+        if before_plot is not None:
+            score_amostra = regression.explained_variance_score(yTeste, yPredTeste)
+            print("Score amostra: {:02.50f}".format(score_amostra))
+            yPred, yPredTeste = before_plot(nn, yPred, yPredTeste, score_amostra, score_todo)
+
         fig = plt.figure()
         ax1 = fig.add_subplot(111)
         ax1.scatter(x[:, 0], y, s=1, c='b', marker="s", label='Real')
