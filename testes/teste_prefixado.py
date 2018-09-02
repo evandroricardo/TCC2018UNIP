@@ -56,6 +56,6 @@ class TestePrefixado:
         ))
         return yPred, yPredTeste
 
-    def predict(self, data, taxa_compra, selic):
+    def predict(self, data, taxa_compra, selic, K=0):
         result = self.regressao_linear(self.pega_csv(), X_test=[[data, taxa_compra, selic]], dont_plot=True)
-        return result + 527.59, "Reg. Linear"
+        return result  +  K, "Reg. Linear"
