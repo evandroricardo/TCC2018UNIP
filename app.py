@@ -45,7 +45,7 @@ def post_consulta_titulo():
 
     #calculo de dias corridos a partir de hoje até a data informada
     data = datetime.datetime.strptime(body["data"], "%d/%m/%Y")
-    dias = (datetime.datetime.today() - data).days
+    dias = (datetime.datetime(2018, 7, 14) - data).days
 
     if titulo == "ipca": #caso ipca importa a classe de teste e armazena os parametros
         from testes.teste_ipca import TesteIPCA as Teste
