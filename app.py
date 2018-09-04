@@ -43,7 +43,7 @@ def post_consulta_titulo():
     #normalizacao do nome do titulo
     titulo = titulo.lower()
 
-    #calculo de dias corridos a partir de hoje até a data informada
+    #calculo de dias corridos a partir da data de extracao dos datasets até a data informada
     data = datetime.datetime.strptime(body["data"], "%d/%m/%Y")
     dias = (datetime.datetime(2018, 7, 14) - data).days
 
