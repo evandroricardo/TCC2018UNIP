@@ -7,6 +7,19 @@ app = Flask(__name__, static_url_path="/static")
 app.url_map.strict_slashes = False
 
 
+# Interpola n pontos entre 0 e y
+def interpolacao(y: float, n_pontos: int=5):
+    def lerp(v0, v1, t):
+        # Extraido de:
+        #     https://en.wikipedia.org/wiki/Linear_interpolation
+        
+        return v0 + t * (v1 - v0)
+    return [
+        lerp(0, y, 1/n_pontos * i)
+        for i in range(1, n_pontos)
+    ]
+
+
 #hook para retirar cors 
 #inidica que e seguro a comunicacao com este servico nos metodos listados
 @app.after_request
@@ -78,9 +91,11 @@ def post_consulta_titulo():
     # predita o valor de compra para o titulo e parametros informados
     print("Efetua predicao")
     y_pred, solved_by = test.predict(*params, K=K)
+    result = list(y_pred)[0]
 
     # estrutura o retorno do metodo
     return json.dumps({
-        "preditado": list(y_pred)[0],
-        "resolucao": solved_by
+        "preditado": result,
+        "resolucao": solved_by,
+        "serie": interpolacao(result, 20)
     }), 200
