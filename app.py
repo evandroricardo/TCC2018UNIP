@@ -7,6 +7,19 @@ app = Flask(__name__, static_url_path="/static")
 app.url_map.strict_slashes = False
 
 
+# Interpola n pontos entre 0 e y
+def interpolacao(y: float, n_pontos: int=5):
+    def lerp(v0, v1, t):
+        # Extraido de:
+        #     https://en.wikipedia.org/wiki/Linear_interpolation
+        
+        return v0 + t * (v1 - v0)
+    return [
+        round(lerp(0, y, 1/n_pontos * i), 2)
+        for i in range(1, n_pontos)
+    ]
+
+
 #hook para retirar cors 
 #inidica que e seguro a comunicacao com este servico nos metodos listados
 @app.after_request
@@ -45,7 +58,9 @@ def post_consulta_titulo():
 
     #calculo de dias corridos a partir da data de extracao dos datasets até a data informada
     data = datetime.datetime.strptime(body["data"], "%d/%m/%Y")
-    dias = (datetime.datetime(2018, 7, 14) - data).days
+    dias = (data - datetime.datetime(2018, 7, 14)).days
+    if dias < 0:
+        dias = -dias
 
     if titulo == "ipca": #caso ipca importa a classe de teste e armazena os parametros
         from testes.teste_ipca import TesteIPCA as Teste
@@ -60,7 +75,7 @@ def post_consulta_titulo():
     elif titulo == "prefixado": #caso prefixado importa a classe de teste e armazena os parametros
         from testes.teste_prefixado import TestePrefixado as Teste
         test = Teste()
-        params = dias, body["taxaCompra"], body["selic"]
+        params = dias, body["taxaCompra"], body["taxaSelic"]
         K = 527.59
     elif titulo == "prefixado_semestral": #caso prefixado_semestral importa a classe de teste e armazena os parametros
         from testes.teste_prefixado_semestral import TestePrefixadoSemestral as Teste
@@ -70,7 +85,7 @@ def post_consulta_titulo():
     elif titulo == "selic": #caso selic importa a classe de teste e armazena os parametros
         from testes.teste_selic import TesteSelic as Teste
         test = Teste()
-        params = dias, body["selic"]
+        params = dias, body["taxaSelic"]
         K = 8990
     else:
         return "Bad Request", 400
@@ -78,9 +93,16 @@ def post_consulta_titulo():
     # predita o valor de compra para o titulo e parametros informados
     print("Efetua predicao")
     y_pred, solved_by = test.predict(*params, K=K)
+    result = list(y_pred)[0]
+    n_pontos = 5
 
     # estrutura o retorno do metodo
     return json.dumps({
-        "preditado": list(y_pred)[0],
-        "resolucao": solved_by
+        "preditado": round(result, 2),
+        "resolucao": solved_by,
+        "serie": interpolacao(result, n_pontos),
+        "datas": [
+            "{0} dias".format(int(1/n_pontos * i * dias))
+            for i in range(1, n_pontos)
+        ]
     }), 200
