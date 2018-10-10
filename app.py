@@ -106,3 +106,10 @@ def post_consulta_titulo():
             for i in range(1, n_pontos)
         ]
     }), 200
+
+
+if __name__ == '__main__':
+    from gevent.wsgi import WSGIServer
+    http_server = WSGIServer(('0.0.0.0', 8080), app)
+    print('Gevent serve forever on', 8080)
+    http_server.serve_forever()
