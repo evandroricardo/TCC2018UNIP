@@ -49,6 +49,13 @@ Chamada da funcao de predicao para o titulo solicitado retorno dos valor de comp
 * param: taxaCompra - valor da taxa de compra do titulo na data informada;
 * param: selic - valor da taxa selic na data informada.  
 
+Dependendo do tipo do título alguns parâmetros podem ser omitidos, pois não são utilizados no cálculo do preço e serão ignorados.
+
+Apenas nos títulos abaixo é necessária a informação da taxa selic, o modelo foi composto utilizando os indicadores os quais são parte da análise.
+
+* Prefixado - informar o título, a data, a taxa de compra e a taxa selic.
+* Selic - informar o título, a data, a taxa de compra e a taxa selic.
+
 ##### Request
 
 ````
