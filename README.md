@@ -1,4 +1,4 @@
-# API - Predcon
+# API - Precon
 
 Api desenvolvida em Python para a chamada de redes neurais e previsão de preço de compra de títulos do Tesouro Direto (Ofertas de Dívidas Públicas).
 
