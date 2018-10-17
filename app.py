@@ -107,7 +107,7 @@ def post_consulta_titulo():
         ]
     }), 200
 
-
+#ativa o servidor para exposição dos serviços do webservice - porta:8080
 if __name__ == '__main__':
     from gevent.wsgi import WSGIServer
     http_server = WSGIServer(('0.0.0.0', 8080), app)
