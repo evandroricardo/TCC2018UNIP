@@ -42,7 +42,7 @@ HTTP/1.1 200 OK
 
 #### consulta_titulo
 
-Chamada da funcao de predicao para o titulo solicitado retorno dos valor de compra preditado juntamente com a metodologia utilizada na funcao.
+Chamada da funcao de predicao para o titulo solicitado, o serviço retorna os valores de compra previstos e também informa a metodologia de cálculo utilizada na funcao.
 
 * param: titulo - tipo de titulo do tesouro direto (ipca, ipca_semestral, prefixado, prefixado_semestral, selic);
 * param: data - data no formato "%d/%m/%Y" para calculo dos dias corridos ou uteis; 
