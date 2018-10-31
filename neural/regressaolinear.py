@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -7,7 +6,7 @@ from sklearn.metrics import r2_score
 # Classe com metodos da regressao linear recebendo  as matrizes para tracar grafico
 # amostras de treinamento considerando os dados da serie historica na matriz utilizada
 # argumentos para não plotagem dos graficos e parametros de configuracao da rede
-def run(csv, x, y, xAmostra, yAmostra, before_plot=None, dont_plot=False, **config):
+def run(csv, x, y, xAmostra, yAmostra, before_plot=None, dont_plot=True, **config):
 
     # Definicao das configuracoes da regressao linear  utilizando as calibragens definidas
     lnr = LinearRegression(**config)
@@ -24,6 +23,7 @@ def run(csv, x, y, xAmostra, yAmostra, before_plot=None, dont_plot=False, **conf
             before_plot(lnr, pred)
             
         # Plotagem das saídas
+        import matplotlib.pyplot as plt
 
         # Plotagem da curva com valores reais 
         plt.scatter(x[:, 0], y, s=1, color='g', marker="s", label='Real')

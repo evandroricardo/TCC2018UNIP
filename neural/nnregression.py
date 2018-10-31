@@ -1,11 +1,10 @@
 from sklearn.metrics import regression
 from sklearn.neural_network import MLPRegressor
-import matplotlib.pyplot as plt
 
 # Classe com metodos da rede neural recebendo  as matrizes para treinamento e predicao
 # amostras de treinamento considerando os dados da serie historica na matriz utilizada
 # argumentos para não plotagem dos graficos e parametros de configuracao da rede
-def run(x, y, xTeste, yTeste, xAmostra, yAmostra, before_plot=None, plot_title=None, dont_plot=False, **config):
+def run(x, y, xTeste, yTeste, xAmostra, yAmostra, before_plot=None, plot_title=None, dont_plot=True, **config):
     
     # Definicao das configuracoes do multilayerperceptron de regrssão utilizando as calibragens da rede
     nn = MLPRegressor(**config)
@@ -37,7 +36,8 @@ def run(x, y, xTeste, yTeste, xAmostra, yAmostra, before_plot=None, plot_title=N
 
             # Devolutiva dos parametros para variaveis (preservar os valores)
             yPred, yPredTeste = before_plot(nn, yPred, yPredTeste, score_amostra, score_todo)
-
+        import matplotlib.pyplot as plt
+        
         # Inicia abertura do metodo para a plotagem do grafico
         fig = plt.figure()
 

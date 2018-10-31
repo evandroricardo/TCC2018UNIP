@@ -1,14 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 # Classe para clusterizacao recebendo como parametros a serie historica a matriz utilizada
 # argumentos (quantidade de clusters) e parametros de configuracao
-def run(csv, x, *args, **config):
-
-    # Inicia a plotagem do grafico com resultados, configura a dimensao na tela
-    plt.figure(figsize=(12, 12))
-
+def run(csv, x, *args, dont_plot=True, **config):
     # Seta o inicio de estado sempre para 0 caso nao definido
     if "random_state" not in config:
         config["random_state"] = 0
@@ -16,14 +11,20 @@ def run(csv, x, *args, **config):
     # Chamada do metodo para predicao
     y_pred = KMeans(*args, **config).fit_predict(x)
 
-    # Plotagem na tela
-    plt.subplot(221)
+    if not dont_plot:
+        import matplotlib.pyplot as plt
+        
+        # Inicia a plotagem do grafico com resultados, configura a dimensao na tela
+        plt.figure(figsize=(12, 12))
 
-    # Configuracao da exibicao do grafico
-    plt.scatter(x[:, 0], x[:, 1], c=y_pred)
+        # Plotagem na tela
+        plt.subplot(221)
 
-    # Titulo do grafico para exibicao em tela
-    plt.title("Data X Preco de Compra")
+        # Configuracao da exibicao do grafico
+        plt.scatter(x[:, 0], x[:, 1], c=y_pred)
 
-    # Carrega grafico na tela
-    plt.show()
+        # Titulo do grafico para exibicao em tela
+        plt.title("Data X Preco de Compra")
+
+        # Carrega grafico na tela
+        plt.show()
