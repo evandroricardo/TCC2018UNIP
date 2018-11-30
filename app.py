@@ -109,7 +109,7 @@ def post_consulta_titulo():
 
 #ativa o servidor para exposição dos serviços do webservice - porta:8080
 if __name__ == '__main__':
-    from gevent.wsgi import WSGIServer
+    from gevent.pywsgi import WSGIServer
     http_server = WSGIServer(('0.0.0.0', 8080), app)
     print('Gevent serve forever on', 8080)
     http_server.serve_forever()
